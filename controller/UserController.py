@@ -4,7 +4,9 @@ import fastapi as _fastapi
 import sqlalchemy.orm as _orm
 from services import  UserService, PostService
 from config  import database as _dbservice
-from schemas import User as _schuser, postbase as _schpost,Post as _post
+from schemas.postbase import PostCreate
+from schemas.User import UserOut
+from schemas.Post import PostOut
 
 _dbservice.create_database()
 
@@ -13,7 +15,7 @@ router = APIRouter(
     tags=['Users']
 )
 
-@router.get("/", response_model=List[_schuser.UserOut])
+@router.get("/", response_model=List[UserOut])
 def read_users(
     skip: int = 0,
     limit: int = 10,
@@ -23,7 +25,7 @@ def read_users(
     return users
 
 
-@router.get("/{user_id}", response_model=_schuser.UserOut)
+@router.get("/{user_id}", response_model=UserOut)
 def read_user(user_id: int, db: _orm.Session = _fastapi.Depends(_dbservice.get_db)):
     db_user = UserService.get_user(db=db, user_id=user_id)
     if db_user is None:
@@ -33,10 +35,10 @@ def read_user(user_id: int, db: _orm.Session = _fastapi.Depends(_dbservice.get_d
     return db_user
 
 
-@router.post("/{user_id}/posts/", response_model=_post.PostOut)
+@router.post("/{user_id}/posts/", response_model=PostOut)
 def create_post(
     user_id: int,
-    post: _schpost.PostCreate,
+    post: PostCreate,
     db: _orm.Session = _fastapi.Depends(_dbservice.get_db),
 ):
     db_user = UserService.get_user(db=db, user_id=user_id)

@@ -9,8 +9,8 @@ app = _fastapi.FastAPI()
 
 _dbservice.create_database()
 
-@app.get("/")
-def index():
+@app.get("/",tags=["root"])
+def index() -> dict:
     return  {"message": "Fast Api Server v0.0.1"}
 
 app.include_router(user_ctl.router)
