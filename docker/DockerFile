@@ -7,6 +7,7 @@ COPY controller /code/controller
 COPY models /code/models
 COPY schemas /code/schemas
 COPY services /code/services
+COPY utils /code/utils
 COPY test  /code/test
 COPY .env.production  /code/.env
 copy main.py  /code/main.py
