@@ -1,0 +1,16 @@
+#  docker-compose -f docker-compose.yml config check validate config
+version: "3.7"
+services:
+  fastapi:
+    build:
+      context: ./docker
+      dockerfile: DockerFile
+    image: "limweb/fastapi:v1"
+    container_name: fastapi
+    working_dir: /code
+    restart: "always"
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    command: "python server.py"
