@@ -1,11 +1,28 @@
 from typing import List
 import fastapi as _fastapi
+from fastapi.middleware.cors import CORSMiddleware
 from config import database as _dbservice
 import controller.UserController as UserController
 import controller.PostController as PostController
 import controller.AuthController as AuthController
 
 app = _fastapi.FastAPI()
+
+# origins = [
+#     "http://localhost.tiangolo.com",
+#     "https://localhost.tiangolo.com",
+#     "http://localhost",
+#     "http://localhost:8080",
+# ]
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 _dbservice.create_database()
 
