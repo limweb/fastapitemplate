@@ -4,8 +4,6 @@ import fastapi as _fastapi
 import sqlalchemy.orm as _orm
 from config import database as _dbservice
 
-_dbservice.create_database()
-
 router = APIRouter(
     prefix="/api/auth",
     tags=['auths']

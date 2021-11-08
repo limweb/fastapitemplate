@@ -3,12 +3,10 @@ from typing import List
 import fastapi as _fastapi
 import sqlalchemy.orm as _orm
 from services import  UserService, PostService
-from config  import database as _dbservice
+from config.database  import get_db
 from schemas.postbase import PostCreate
 from schemas.User import UserOut
 from schemas.Post import PostOut
-
-_dbservice.create_database()
 
 router = APIRouter(
     prefix="/api/users",
@@ -19,14 +17,14 @@ router = APIRouter(
 def read_users(
     skip: int = 0,
     limit: int = 10,
-    db: _orm.Session = _fastapi.Depends(_dbservice.get_db),
+    db: _orm.Session = _fastapi.Depends(get_db),
 ):
     users = UserService.get_users(db=db, skip=skip, limit=limit)
     return users
 
 
 @router.get("/{user_id}", response_model=UserOut)
-def read_user(user_id: int, db: _orm.Session = _fastapi.Depends(_dbservice.get_db)):
+def read_user(user_id: int, db: _orm.Session = _fastapi.Depends(get_db)):
     db_user = UserService.get_user(db=db, user_id=user_id)
     if db_user is None:
         raise _fastapi.HTTPException(
@@ -39,7 +37,7 @@ def read_user(user_id: int, db: _orm.Session = _fastapi.Depends(_dbservice.get_d
 def create_post(
     user_id: int,
     post: PostCreate,
-    db: _orm.Session = _fastapi.Depends(_dbservice.get_db),
+    db: _orm.Session = _fastapi.Depends(get_db),
 ):
     db_user = UserService.get_user(db=db, user_id=user_id)
     if db_user is None:
