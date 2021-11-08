@@ -5,6 +5,7 @@ from config import database as _dbservice
 import controller.UserController as UserController
 import controller.PostController as PostController
 import controller.AuthController as AuthController
+import controller.UploadController as UploadController
 
 app = _fastapi.FastAPI()
 
@@ -43,3 +44,4 @@ def index() -> dict:
 app.include_router(AuthController.router)
 app.include_router(UserController.router)
 app.include_router(PostController.router)
+app.include_router(UploadController.router)
