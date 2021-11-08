@@ -5,11 +5,11 @@ from datetime import datetime, timedelta # used to handle expiry time for tokens
 from decouple import config
 
 SECURITY_ALGORITHM = config('algorithm')
-SECRET_KEY = config("secret")
+PK = open(config('pkpath')).read()
+PUBK = open(config('pubkpath')).read()
 
-class JWTAUTH():
+class JWTAUTHPK():
     hasher= CryptContext(schemes=['bcrypt'])
-    secret = SECRET_KEY
 
     def encode_password(self, password):
         return self.hasher.hash(password)
@@ -22,17 +22,18 @@ class JWTAUTH():
             'exp' : datetime.utcnow() + timedelta(days=0, minutes=30),
             'iat' : datetime.utcnow(),
 	        'scope': 'access_token',
+            'pub_key': PUBK,
             'sub' : email
         }
         return jwt.encode(
             payload,
-            self.secret,
+            PK,
             algorithm= SECURITY_ALGORITHM
         )
 
     def decode_token(self, token):
         try:
-            payload = jwt.decode(token, self.secret, algorithms=[SECURITY_ALGORITHM])
+            payload = jwt.decode(token, PUBK, algorithms=[SECURITY_ALGORITHM])
             if (payload['scope'] == 'access_token'):
                 return payload['sub']
             raise HTTPException(status_code=401, detail='Scope for the token is invalid')
@@ -50,12 +51,12 @@ class JWTAUTH():
         }
         return jwt.encode(
             payload,
-            self.secret,
+            PK,
             algorithm= SECURITY_ALGORITHM
         )
     def refresh_token(self, refresh_token):
         try:
-            payload = jwt.decode(refresh_token, self.secret, algorithms=[SECURITY_ALGORITHM])
+            payload = jwt.decode(refresh_token, PUBK, algorithms=[SECURITY_ALGORITHM])
             if (payload['scope'] == 'refresh_token'):
                 email = payload['sub']
                 new_token = self.encode_token(email)

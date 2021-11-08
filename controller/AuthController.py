@@ -6,6 +6,8 @@ from config.database import get_db
 from fastapi import FastAPI, HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from utils.jwt import JWTAUTH
+from utils.jwtpk import JWTAUTHPK
+
 from services import  UserService
 import schemas.userbase as _userbase
 from schemas.User import UserOut
@@ -17,7 +19,8 @@ router = APIRouter(
 
 
 security = HTTPBearer()
-auth_handler = JWTAUTH()
+# auth_handler = JWTAUTH() # user secert key
+auth_handler = JWTAUTHPK() # used  private.key and public.key
 
 @router.post('/signup')
 def signup(user_details: _userbase.UserCreate,db: _orm.Session = _fastapi.Depends(get_db)):
