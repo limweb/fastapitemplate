@@ -1,11 +1,12 @@
-from typing import List
 import fastapi as _fastapi
-from fastapi.middleware.cors import CORSMiddleware
 from config import database as _dbservice
 import controller.UserController as UserController
 import controller.PostController as PostController
 import controller.AuthController as AuthController
 import controller.UploadController as UploadController
+from typing import List
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = _fastapi.FastAPI()
 
@@ -26,6 +27,8 @@ app.add_middleware(
 )
 
 _dbservice.create_database()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.on_event("startup")
 async def startup():
