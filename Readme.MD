@@ -11,6 +11,7 @@
     ok
 
 #upload file
+    ok
 
 #cores
     ok
