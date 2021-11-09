@@ -4,9 +4,9 @@ import controller.UserController as UserController
 import controller.PostController as PostController
 import controller.AuthController as AuthController
 import controller.UploadController as UploadController
-from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 
 app = _fastapi.FastAPI()
 
@@ -41,8 +41,9 @@ async def shutdown():
     # await db.disconnect()
 
 @app.get("/",tags=["root"])
-def index() -> dict:
-    return  {"message": "Fast Api Server v0.0.1"}
+def index():
+    response = RedirectResponse(url='/static/index.html')
+    return response
 
 app.include_router(AuthController.router)
 app.include_router(UserController.router)
